@@ -6,13 +6,34 @@ Privacy: All frames processed in-memory only, never saved to disk.
 
 import cv2
 import numpy as np
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 from dataclasses import dataclass
 
 from src.core.config import CameraConfig
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+
+def list_available_cameras(max_test: int = 5) -> List[int]:
+    """
+    List available camera indices.
+
+    Args:
+        max_test: Maximum camera index to test
+
+    Returns:
+        List of available camera indices
+    """
+    available = []
+    for i in range(max_test):
+        cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
+        if cap.isOpened():
+            available.append(i)
+            cap.release()
+
+    logger.info(f"Found {len(available)} available cameras: {available}")
+    return available
 
 
 @dataclass

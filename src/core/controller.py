@@ -82,6 +82,12 @@ class Controller:
         # Calibration countdown tracking
         self._calibration_countdown_start: Optional[float] = None
 
+        # Tracking control (for safety)
+        self._tracking_enabled = False  # User must explicitly enable
+
+        # Last valid cursor position (for freeze on face lost)
+        self._last_cursor_pos: Optional[tuple[int, int]] = None
+
         logger.info(f"Controller initialized for {screen_width}x{screen_height}")
 
     def initialize(self) -> bool:
@@ -181,6 +187,7 @@ class Controller:
             self._cursor_controller.enable()
             self._smoother.reset()
             self._fps_counter.reset()
+            self._tracking_enabled = True  # Enable tracking by default
 
             self._state_machine.transition_to(AppState.TRACKING)
             logger.info("Tracking started")
@@ -204,6 +211,7 @@ class Controller:
             True if stopped successfully
         """
         if self._state_machine.current_state == AppState.TRACKING:
+            self._tracking_enabled = False  # Disable tracking
             self._cursor_controller.disable()
             self._camera.close()
             self._state_machine.transition_to(AppState.IDLE)
@@ -293,6 +301,9 @@ class Controller:
         # Detect face
         face_landmarks = self._face_tracker.process_frame(frame.image)
         if face_landmarks is None:
+            # Face not detected - freeze cursor if configured
+            if current_state == AppState.TRACKING and self._config.gaze.freeze_on_face_lost:
+                result.cursor_pos = self._last_cursor_pos
             return result
 
         result.face_detected = True
@@ -300,6 +311,9 @@ class Controller:
         # Estimate gaze
         gaze = self._gaze_estimator.estimate(face_landmarks)
         if gaze is None:
+            # Gaze estimation failed - freeze cursor if configured
+            if current_state == AppState.TRACKING and self._config.gaze.freeze_on_face_lost:
+                result.cursor_pos = self._last_cursor_pos
             return result
 
         result.gaze = gaze
@@ -346,6 +360,10 @@ class Controller:
         if self._gaze_mapper is None:
             return None
 
+        # Check if tracking is enabled (safety control)
+        if not self._tracking_enabled:
+            return self._last_cursor_pos
+
         # Map gaze to screen coordinates
         screen_x, screen_y = self._gaze_mapper.map_gaze_to_screen(gaze)
 
@@ -354,6 +372,9 @@ class Controller:
 
         # Move cursor
         self._cursor_controller.move_to(smoothed.x, smoothed.y)
+
+        # Remember last position
+        self._last_cursor_pos = (smoothed.x, smoothed.y)
 
         return (smoothed.x, smoothed.y)
 
@@ -439,6 +460,32 @@ class Controller:
         self._config.gaze.sensitivity = sensitivity
         self._smoother.update_config(self._config.gaze)
         logger.debug(f"Sensitivity updated: {sensitivity:.2f}")
+
+    def enable_tracking(self):
+        """Enable cursor tracking (safety control)."""
+        self._tracking_enabled = True
+        logger.info("Cursor tracking enabled")
+
+    def disable_tracking(self):
+        """Disable cursor tracking (safety control)."""
+        self._tracking_enabled = False
+        logger.info("Cursor tracking disabled")
+
+    def toggle_tracking(self) -> bool:
+        """
+        Toggle tracking enabled state.
+
+        Returns:
+            New tracking state (True = enabled)
+        """
+        self._tracking_enabled = not self._tracking_enabled
+        state_str = "enabled" if self._tracking_enabled else "disabled"
+        logger.info(f"Cursor tracking toggled: {state_str}")
+        return self._tracking_enabled
+
+    def is_tracking_enabled(self) -> bool:
+        """Check if tracking is currently enabled."""
+        return self._tracking_enabled
 
     def shutdown(self):
         """Clean shutdown of all components."""

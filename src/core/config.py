@@ -27,19 +27,22 @@ class GazeConfig:
     """Gaze estimation configuration."""
 
     # Smoothing parameters (exponential moving average)
-    smoothing_factor: float = 0.3  # Lower = more smoothing, range: 0.0-1.0
+    smoothing_factor: float = 0.2  # Lower = more smoothing, range: 0.0-1.0
 
     # Dead zone around center to prevent micro-jitter (proportion of screen)
-    dead_zone_radius: float = 0.02  # 2% of screen size
+    dead_zone_radius: float = 0.035  # 3.5% of screen size
 
     # Maximum cursor movement per frame (pixels)
-    max_velocity: float = 50.0  # Prevents sudden jumps
+    max_velocity: float = 35.0  # Prevents sudden jumps
 
     # Sensitivity multiplier
-    sensitivity: float = 1.0  # Range: 0.1-3.0
+    sensitivity: float = 0.8  # Range: 0.1-3.0
 
     # Minimum confidence threshold for face detection
-    min_face_confidence: float = 0.5
+    min_face_confidence: float = 0.6
+
+    # Freeze cursor when face lost (instead of drifting)
+    freeze_on_face_lost: bool = True
 
 
 @dataclass
@@ -47,26 +50,29 @@ class CalibrationConfig:
     """Calibration procedure configuration."""
 
     # Number of samples to collect per calibration point
-    samples_per_point: int = 60  # 2 seconds at 30fps
+    samples_per_point: int = 90  # 3 seconds at 30fps (increased for accuracy)
 
     # Countdown before starting sample collection (seconds)
-    countdown_seconds: int = 2
+    countdown_seconds: int = 3  # Increased for user preparation
 
     # Target positions (normalized 0-1 screen coordinates)
     # Order: center, left, right, top, bottom
     target_positions: Tuple[Tuple[float, float], ...] = (
         (0.5, 0.5),   # Center
-        (0.1, 0.5),   # Left
-        (0.9, 0.5),   # Right
-        (0.5, 0.1),   # Top
-        (0.5, 0.9),   # Bottom
+        (0.15, 0.5),  # Left (slightly more conservative)
+        (0.85, 0.5),  # Right (slightly more conservative)
+        (0.5, 0.15),  # Top (slightly more conservative)
+        (0.5, 0.85),  # Bottom (slightly more conservative)
     )
 
     # Target dot size (pixels)
-    target_size: int = 20
+    target_size: int = 25  # Increased for better visibility
 
     # Use trimmed mean to reject outliers (trim this proportion from each end)
-    outlier_trim_percent: float = 0.1  # Trim 10% from each end
+    outlier_trim_percent: float = 0.15  # Trim 15% from each end (more aggressive outlier rejection)
+
+    # Minimum stable samples required (discard frames with high variance)
+    min_stable_samples: int = 60  # Require at least this many stable samples
 
 
 @dataclass
@@ -111,9 +117,11 @@ class StorageConfig:
 class UIConfig:
     """User interface configuration."""
 
-    window_title: str = "VisionCursor - Gaze Tracking"
-    window_width: int = 800
-    window_height: int = 600
+    window_title: str = "VisionCursor - Gaze Tracking System"
+    window_width: int = 850
+    window_height: int = 700
+    window_min_width: int = 750
+    window_min_height: int = 600
 
     # Show debug overlay with landmarks and gaze vector
     show_debug_overlay: bool = False
@@ -121,6 +129,14 @@ class UIConfig:
     # Preview window size
     preview_width: int = 320
     preview_height: int = 240
+
+    # UI spacing and padding
+    content_margin: int = 15
+    group_spacing: int = 10
+    widget_spacing: int = 8
+
+    # Emergency stop keyboard shortcut
+    toggle_shortcut: str = "Space"  # Keyboard shortcut to toggle tracking
 
 
 @dataclass
