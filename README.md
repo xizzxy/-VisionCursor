@@ -2,17 +2,16 @@
 
 A privacy-focused Windows desktop application that uses webcam-based gaze tracking to control your mouse cursor.
 
-## 🔒 Privacy & Security First
+##  Privacy & Security First
 
 **VisionCursor is designed with your privacy in mind:**
-
-- ✅ **All processing happens locally** - No data ever leaves your computer
-- ✅ **No video recording** - Frames are processed in-memory only
-- ✅ **No telemetry** - Zero network communication
-- ✅ **Minimal data storage** - Only calibration parameters (numeric values) are saved
-- ✅ **No biometric templates** - We don't store facial recognition data
-- ✅ **Easy data deletion** - One-click calibration data removal in the UI
-- ✅ **Open source** - Full transparency, audit the code yourself
+-  **All processing happens locally** - No data ever leaves your computer
+-  **No video recording** - Frames are processed in-memory only
+-  **No telemetry** - Zero network communication
+-  **Minimal data storage** - Only calibration parameters (numeric values) are saved
+-  **No biometric templates** - We don't store facial recognition data
+-  **Easy data deletion** - One-click calibration data removal in the UI
+-  **Open source** - Full transparency, audit the code yourself
 
 ### What Data is Processed?
 - **Webcam frames** - Processed in real-time, never saved to disk
@@ -28,19 +27,19 @@ A privacy-focused Windows desktop application that uses webcam-based gaze tracki
   - **No images, no video, no biometric identifiers**
 
 ### What is NEVER Stored?
-- ❌ Webcam images or video
-- ❌ Facial recognition templates
-- ❌ Personal identifiable information
-- ❌ Usage telemetry or analytics
+-  Webcam images or video
+-  Facial recognition templates
+-  Personal identifiable information
+-  Usage telemetry or analytics
 
 ## Features
 
-- 🎯 **Gaze-based cursor control** - Move your mouse cursor by looking at different areas of the screen
-- 🎨 **Guided calibration** - Face ID-style setup with 5 calibration points
-- 🔧 **Adjustable sensitivity** - Fine-tune cursor speed and smoothing
-- 🛡️ **Safety controls** - Dead zones, velocity limiting, and emergency stop
-- 🎭 **Debug overlay** - Visual feedback for development and troubleshooting
-- ⏸️ **Pause/Resume** - Quick toggle to disable tracking temporarily
+-  **Gaze-based cursor control** - Move your mouse cursor by looking at different areas of the screen
+-  **Guided calibration** - Face ID-style setup with 5 calibration points
+-  **Adjustable sensitivity** - Fine-tune cursor speed and smoothing
+-  **Safety controls** - Dead zones, velocity limiting, and emergency stop
+-  **Debug overlay** - Visual feedback for development and troubleshooting
+-  **Pause/Resume** - Quick toggle to disable tracking temporarily
 
 ## System Requirements
 
@@ -102,11 +101,11 @@ python -m src.main
 
 ### Tips for Best Results
 
-- 🪑 **Consistent seating position** - Sit at similar distance from screen during calibration and use
-- 💡 **Good lighting** - Ensure your face is well-lit (avoid backlighting)
-- 👓 **Glasses OK** - Works with most eyeglasses (avoid heavily tinted lenses)
-- 📐 **Screen angle** - Keep screen perpendicular to your gaze
-- 🔄 **Re-calibrate** - Run calibration again if you change seating position or lighting
+-  **Consistent seating position** - Sit at similar distance from screen during calibration and use
+-  **Good lighting** - Ensure your face is well-lit (avoid backlighting)
+-  **Glasses OK** - Works with most eyeglasses (avoid heavily tinted lenses)
+-  **Screen angle** - Keep screen perpendicular to your gaze
+-  **Re-calibrate** - Run calibration again if you change seating position or lighting
 
 ## Architecture
 
@@ -175,31 +174,6 @@ set VISIONCURSOR_LOG_LEVEL=DEBUG
 python -m src.main
 ```
 
-## Troubleshooting
-
-### Camera Not Detected
-- Ensure no other application is using the webcam
-- Check Windows Privacy Settings → Camera → Allow desktop apps
-- Try disconnecting/reconnecting USB webcam
-
-### Poor Tracking Accuracy
-- Run calibration again
-- Improve lighting conditions
-- Clean webcam lens
-- Reduce sensitivity in UI
-- Ensure face is centered in camera view
-
-### High CPU Usage
-- Reduce camera resolution in config
-- Close other resource-intensive applications
-- Update graphics drivers
-
-### Cursor Jittery/Unstable
-- Increase smoothing in UI
-- Enable larger dead zone
-- Reduce sensitivity
-- Improve lighting for better face detection
-
 ## Known Limitations
 
 - **Head movement** - Works best with minimal head movement; primarily tracks eye/gaze direction
@@ -216,9 +190,6 @@ Contributions welcome! Please:
 4. Ensure all tests pass
 5. Submit a pull request
 
-## License
-
-MIT License - See LICENSE file for details
 
 ## Disclaimer
 
@@ -229,11 +200,7 @@ VisionCursor is experimental assistive technology. Not recommended for:
 
 Always have a fallback input method available.
 
-## Support
 
-- 📖 Documentation: [docs/](docs/)
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/visioncursor/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/visioncursor/discussions)
 
 ---
 
