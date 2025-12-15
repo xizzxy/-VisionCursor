@@ -1,0 +1,17 @@
+# VisionCursor Requirements
+# Python 3.12 (Windows)
+
+# Computer Vision
+mediapipe==0.10.21
+opencv-contrib-python==4.11.0.86
+numpy==1.26.4
+scipy>=1.12
+
+# GUI
+PyQt6>=6.6.1
+
+# OS Control
+pynput==1.7.6
+
+# Utilities
+python-dotenv==1.0.0
